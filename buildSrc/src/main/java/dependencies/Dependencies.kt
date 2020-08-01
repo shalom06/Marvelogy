@@ -42,4 +42,7 @@ object Dependencies {
     val constraintlayout = "androidx.constraintlayout:constraintlayout:${Versions.constraintlayout}"
     val material_design = "com.google.android.material:material:${Versions.material_design}"
 
+
+    val dagger_hilt="com.google.dagger:hilt-android:${Versions.dagger_hilt}"
+
 }

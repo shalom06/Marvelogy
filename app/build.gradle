@@ -1,15 +1,17 @@
 import dependencies.Annotations
 import dependencies.Application
 import dependencies.Dependencies
+import dependencies.Plugins
 
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
-apply plugin: 'kotlin-kapt'
+apply plugin: Plugins.application_plugon
+apply plugin: Plugins.kotlin_android
+apply plugin: Plugins.kotlin_andorid_extensions
+apply plugin: Plugins.kapt
+apply plugin: Plugins.dagger_hilt
 
 android {
-    compileSdkVersion 29
-    buildToolsVersion "29.0.3"
+    compileSdkVersion Application.compile_sdk
+    buildToolsVersion Application.build_tools
 
     defaultConfig {
         applicationId Application.id
@@ -52,7 +54,6 @@ dependencies {
 
     implementation Dependencies.play_core
     implementation Dependencies.leak_canary
-    implementation Dependencies.dagger
     implementation Dependencies.room_runtime
     implementation Dependencies.room_ktx
 
@@ -69,11 +70,17 @@ dependencies {
     implementation Dependencies.constraintlayout
     implementation Dependencies.material_design
 
+    implementation Dependencies.dagger_hilt
+
+
     kapt Annotations.room_compiler
-    kapt Annotations.dagger_compiler
+    kapt Annotations.dagger_hilt_compiler
 
     testImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
+}
+kapt{
+    correctErrorTypes true
 }
