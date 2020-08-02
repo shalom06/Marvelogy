@@ -1,6 +1,6 @@
 package com.shalom.marvelogy.di
 
-import com.google.gson.Gson
+import com.shalom.marvelogy.api.marvelapiservice.MarvelApiService
 import com.shalom.marvelogy.repos.marvelrepository.MarvelRepository
 import com.shalom.marvelogy.repos.marvelrepository.MarvelRepositoryImpl
 import dagger.Module
@@ -16,8 +16,8 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideMarvelRepository(gson: Gson): MarvelRepository {
-        return MarvelRepositoryImpl(gson)
+    fun provideMarvelRepository(marvelApiService: MarvelApiService): MarvelRepository {
+        return MarvelRepositoryImpl(marvelApiService)
     }
 
 }

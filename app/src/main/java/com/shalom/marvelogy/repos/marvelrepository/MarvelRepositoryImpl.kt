@@ -1,8 +1,16 @@
 package com.shalom.marvelogy.repos.marvelrepository
 
-import com.google.gson.Gson
-import javax.inject.Inject
+import com.shalom.marvelogy.api.marvelapiservice.MarvelApiService
 
-class MarvelRepositoryImpl  constructor(gson: Gson) : MarvelRepository {
-    override fun test(): String = "test"
+class MarvelRepositoryImpl constructor(private val marvelApi: MarvelApiService) : MarvelRepository {
+    override suspend fun getCharacters(limit: Int) {
+        try {
+            val chars = marvelApi.getCharacters()
+            print(chars)
+        } catch (ex: Exception) {
+            print(ex)
+        }
+
+    }
+
 }
