@@ -1,6 +1,6 @@
 package com.shalom.marvelogy.models.network
 
-data class CharectersApiResponse(
+data class CharactersApiResponse(
     val attributionHTML: String,
     val attributionText: String,
     val code: String,

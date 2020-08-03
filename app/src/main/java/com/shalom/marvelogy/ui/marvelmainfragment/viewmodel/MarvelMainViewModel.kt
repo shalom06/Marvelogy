@@ -2,11 +2,16 @@ package com.shalom.marvelogy.ui.marvelmainfragment.viewmodel
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.shalom.marvelogy.repos.marvelrepository.MarvelRepository
+import com.shalom.marvelogy.ui.marvelmainfragment.state.MainStateEvent
+import com.shalom.marvelogy.ui.marvelmainfragment.state.MainStateEvent.GetCharacters
+import com.shalom.marvelogy.ui.marvelmainfragment.state.MainStateEvent.None
+import com.shalom.marvelogy.ui.marvelmainfragment.state.MainViewState
+import com.shalom.marvelogy.utils.reactiveutils.DataState
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class MarvelMainViewModel
@@ -15,11 +20,42 @@ class MarvelMainViewModel
     @Assisted private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    fun getCharacters() {
-        viewModelScope.launch(Dispatchers.IO) {
-            marvelRepo.getCharacters(2)
-        }
+
+    private val _viewState: MutableLiveData<MainViewState> = MutableLiveData()
+    private val _stateEvent: MutableLiveData<MainStateEvent> = MutableLiveData()
+    private val _dataState: MutableLiveData<DataState<MainViewState>> = MutableLiveData()
+
+    val dataState = _dataState as LiveData<DataState<MainViewState>>
+
+    val viewState: LiveData<MainViewState>
+        get() = _viewState
 
 
+    fun updateStateEvent(event: MainStateEvent) {
+        _stateEvent.value = event
+        handleStateEvent(event)
     }
+
+
+    private fun handleStateEvent(stateEvent: MainStateEvent) {
+        when (stateEvent) {
+            is GetCharacters -> {
+                viewModelScope.launch {
+                    marvelRepo.getCharacters()
+                        .flowOn(Dispatchers.Main)
+                        .collect {
+                            it.data?.let { data ->
+                                _viewState.value = data
+                            }
+                            _dataState.value = it
+                        }
+                }
+            }
+            is None -> {
+
+            }
+        }
+    }
+
+
 }
